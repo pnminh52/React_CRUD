@@ -1,85 +1,97 @@
-import { useState } from "react";
-
-const productList = [
-  {
-    id: 1,
-    name: "Product 1",
-    image: "https://picsum.photos/200/120",
-    description: "Desc 1",
-  },
-  {
-    id: 2,
-    name: "Product 2",
-    image: "https://picsum.photos/200/120",
-    description: "Desc 2",
-  },
-];
+import { useEffect, useState } from "react";
+import "./App.css";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import ProductList from "./pages/ProductList";
+import HomaPage from "./pages/HomaPage";
+import ProductUpdate from "./pages/ProductUpdate";
+import ProductAdd from "./pages/ProductAdd";
 
 function App() {
-  const [products, setProducts] = useState(productList);
-  const [inputValue, setinputValue] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [inputValue, setInputValue] = useState({});
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch("http://localhost:3000/products")
+      .then((response) => response.json())
+      .then((data) => setProducts(data))
+      .catch((error) => console.log(error));
+  }, []);
   const onHandleRemove = (id) => {
-    const newProductList = products.filter((item) => {
-      return item.id != id;
-    });
-    setProducts(newProductList);
-  };
-  const onHandleSubmit = (e) => {
-    e.preventDefault();
-    const newData = [...products, inputValue];
-    setProducts(newData);
-  };
-  const onHandleChange = (e) => {
-    const { name, value } = e.target;
-    setinputValue({ ...inputValue, [name]: value, id: 4 });
+    if (confirm("Ban co muon xoa khong?") == true) {
+      fetch(`http://localhost:3000/products/${id}`, {
+        method: "DELETE",
+      });
+      const newProductList = products.filter((item) => {
+        return item.id != id;
+      });
+      setProducts(newProductList);
+    }
   };
 
+  const onHandleChange = (e) => {
+    const { name, value } = e.target;
+    setInputValue({ ...inputValue, [name]: value });
+  };
+
+  const onHandleSubmit = (e) => {
+    e.preventDefault();
+
+    fetch(`http://localhost:3000/products`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(inputValue),
+    })
+      .then((response) => response.json())
+      .then((data) => setProducts([...products, data]))
+      .then(() => navigate("/admin/products/list"));
+  };
+
+  const onHandleUpdate = (product) => {
+    fetch(`http://localhost:3000/products/${product.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(product),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .then(() => navigate("/admin/products/list"));
+  };
   return (
     <>
-      <form action="" onSubmit={onHandleSubmit}>
-        <div>
-          <label htmlFor="">name</label>
-          <input type="text" name="name" onInput={onHandleChange} />
-        </div>
-        <div>
-          <label htmlFor="">image</label>
-          <input type="text" name="image" onInput={onHandleChange} />
-        </div>
-        <div>
-          <label htmlFor="">description</label>
-          <input type="text" name="description" onInput={onHandleChange} />
-        </div>
-        <button>Submit</button>
-      </form>
-      <table>
-        <thead>
-          <tr>
-            <td>name</td>
-            <td>image</td>
-            <td>des</td>
-            <td>action</td>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((product) => {
-            return (
-              <tr key={product.id}>
-                <td>
-                  <img src={product.image} alt="" />
-                </td>
-                <td>{product.name}</td>
-                <td>{product.description}</td>
-                <td>
-                  <button onClick={() => onHandleRemove(product.id)}>
-                    Xoa
-                  </button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <Routes>
+        <Route path="/admin" element={<HomaPage />} />
+        <Route
+          path="/admin/products/list"
+          element={
+            <ProductList products={products} onHandleRemove={onHandleRemove} />
+          }
+        />
+        <Route
+          path="/admin/products/:id/update"
+          element={
+            <ProductUpdate
+              products={products}
+              onHandleUpdate={onHandleUpdate}
+            />
+          }
+        />
+        <Route
+          path="/admin/products/add"
+          element={
+            <ProductAdd
+              onHandleChange={onHandleChange}
+              onHandleSubmit={onHandleSubmit}
+            />
+          }
+        />
+      </Routes>
     </>
   );
 }
+
 export default App;

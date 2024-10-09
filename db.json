@@ -1,0 +1,16 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "name": "NEW",
+      "image": "https://picsum.photos/200/120",
+      "description": "Desc 1"
+    },
+    {
+      "id": "a14a",
+      "name": "AHAHAHAHAHA",
+      "image": "https://picsum.photos/600/200",
+      "description": "sfydsfjds"
+    }
+  ]
+}
