@@ -12,15 +12,10 @@ function App() {
   useEffect(() => {
     fetch("http://localhost:3000/products")
       .then((response) => response.json())
-      .then((data) => setProducts(data))
-      .catch((error) => console.log(error));
+      .then((data) => setProducts(data));
   }, []);
-  const onHandleChange = (e) => {
-    const { name, value } = e.target;
-    setInputValue({ ...inputValue, [name]: value });
-  };
   const onHandleRemove = (id) => {
-    if (confirm("delete?") == true) {
+    if (confirm("Delete?") == true) {
       fetch(`http://localhost:3000/products/${id}`, {
         method: "DELETE",
       });
@@ -30,13 +25,15 @@ function App() {
       setProducts(newProductList);
     }
   };
+  const onHandleChange = (e) => {
+    const { name, value } = e.target;
+    setInputValue({ ...inputValue, [name]: value });
+  };
   const onHandleSubmit = (e) => {
     e.preventDefault();
     fetch(`http://localhost:3000/products`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(inputValue),
     })
       .then((response) => response.json())
@@ -46,10 +43,8 @@ function App() {
   const onHandleUpdate = (product) => {
     fetch(`http://localhost:3000/products/${product.id}`, {
       method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(product),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(inputValue),
     })
       .then((response) => response.json())
       .then((data) =>
@@ -61,6 +56,16 @@ function App() {
     <>
       <Routes>
         <Route path="/admin" element={<HomaPage />} />
+
+        <Route
+          path="/admin/products/add"
+          element={
+            <ProductAdd
+              onHandleChange={onHandleChange}
+              onHandleSubmit={onHandleSubmit}
+            />
+          }
+        />
         <Route
           path="/admin/products/list"
           element={
@@ -68,20 +73,11 @@ function App() {
           }
         />
         <Route
-          path="/admin/products/:id/update"
+          path="/admin/product/:id/update"
           element={
             <ProductUpdate
               products={products}
               onHandleUpdate={onHandleUpdate}
-            />
-          }
-        />
-        <Route
-          path="/admin/products/add"
-          element={
-            <ProductAdd
-              onHandleChange={onHandleChange}
-              onHandleSubmit={onHandleSubmit}
             />
           }
         />

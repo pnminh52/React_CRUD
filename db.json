@@ -2,20 +2,14 @@
   "products": [
     {
       "id": "1",
-      "name": "NEW",
+      "name": "ITACHIIIII",
       "image": "https://picsum.photos/200/120",
       "description": "Desc 1"
     },
     {
-      "id": "a14a",
-      "name": "AHAHAHAHAHA",
-      "image": "https://picsum.photos/600/200",
-      "description": "sfydsfjds"
-    },
-    {
-      "id": "5b80",
-      "name": "EHEEHHEHEHEHHE",
-      "image": "https://picsum.photos/200/200",
+      "id": "e056",
+      "name": "NARUTOOOOOOO",
+      "image": "https://fastly.picsum.photos/id/704/200/200.jpg?hmac=kJOOLetUU-CUDBZJ8Y1l52dL4qYp9QRAKpQC8OsyOSo",
       "description": "desc 3"
     }
   ]
