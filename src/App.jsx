@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import "./App.css";
+import React, { useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import ProductList from "./pages/ProductList";
 import HomaPage from "./pages/HomaPage";
@@ -10,15 +9,18 @@ function App() {
   const [products, setProducts] = useState([]);
   const [inputValue, setInputValue] = useState({});
   const navigate = useNavigate();
-
   useEffect(() => {
     fetch("http://localhost:3000/products")
       .then((response) => response.json())
       .then((data) => setProducts(data))
       .catch((error) => console.log(error));
   }, []);
+  const onHandleChange = (e) => {
+    const { name, value } = e.target;
+    setInputValue({ ...inputValue, [name]: value });
+  };
   const onHandleRemove = (id) => {
-    if (confirm("Ban co muon xoa khong?") == true) {
+    if (confirm("delete?") == true) {
       fetch(`http://localhost:3000/products/${id}`, {
         method: "DELETE",
       });
@@ -28,15 +30,8 @@ function App() {
       setProducts(newProductList);
     }
   };
-
-  const onHandleChange = (e) => {
-    const { name, value } = e.target;
-    setInputValue({ ...inputValue, [name]: value });
-  };
-
   const onHandleSubmit = (e) => {
     e.preventDefault();
-
     fetch(`http://localhost:3000/products`, {
       method: "POST",
       headers: {
@@ -48,7 +43,6 @@ function App() {
       .then((data) => setProducts([...products, data]))
       .then(() => navigate("/admin/products/list"));
   };
-
   const onHandleUpdate = (product) => {
     fetch(`http://localhost:3000/products/${product.id}`, {
       method: "PATCH",
@@ -58,7 +52,9 @@ function App() {
       body: JSON.stringify(product),
     })
       .then((response) => response.json())
-      .then((data) => console.log(data))
+      .then((data) =>
+        setProducts(products.map((item) => (item.id == data.id ? data : item)))
+      )
       .then(() => navigate("/admin/products/list"));
   };
   return (

@@ -19,7 +19,6 @@ const ProductUpdate = ({ products, onHandleUpdate }) => {
   };
   return (
     <div>
-      <h1>Cập nhật sản phẩm</h1>
       <form onSubmit={onUpdate}>
         <div className="form-group">
           <label htmlFor="">Tên sản phẩm</label>
