@@ -4,9 +4,8 @@ import { useNavigate, useParams } from "react-router-dom";
 const ProductUpdate = ({ products, onHandleUpdate }) => {
   const [inputValue, setInputValue] = useState({});
   const { id } = useParams();
-
+  const navigate = useNavigate();
   const currentProduct = products.find((item) => item.id == id);
-  console.log(currentProduct);
 
   const onHandleChange = (e) => {
     const { name, value } = e.target;
@@ -19,6 +18,7 @@ const ProductUpdate = ({ products, onHandleUpdate }) => {
   };
   return (
     <div>
+      <h1>Cập nhật sản phẩm</h1>
       <form onSubmit={onUpdate}>
         <div className="form-group">
           <label htmlFor="">Tên sản phẩm</label>
