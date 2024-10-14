@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const ProductUpdate = ({ products, onHandleUpdate }) => {
   const [inputValue, setInputValue] = useState({});
   const { id } = useParams();
-  const navigate = useNavigate();
   const currentProduct = products.find((item) => item.id == id);
 
   const onHandleChange = (e) => {
@@ -18,31 +17,28 @@ const ProductUpdate = ({ products, onHandleUpdate }) => {
   };
   return (
     <div>
-      <h1>Cập nhật sản phẩm</h1>
       <form onSubmit={onUpdate}>
-        <div className="form-group">
-          <label htmlFor="">Tên sản phẩm</label>
+        <div>
           <input
             type="text"
             name="name"
+            placeholder="name"
             onInput={onHandleChange}
             defaultValue={currentProduct.name}
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="">Ảnh sản phẩm</label>
+
           <input
             type="text"
-            name="image"
+            name="price"
+            placeholder="price"
             onInput={onHandleChange}
-            defaultValue={currentProduct.image}
+            defaultValue={currentProduct.price}
           />
-        </div>
-        <div className="form-group">
-          <label htmlFor="">Mô tả sản phẩm</label>
+
           <input
             type="text"
             name="description"
+            placeholder="des"
             onInput={onHandleChange}
             defaultValue={currentProduct.description}
           />

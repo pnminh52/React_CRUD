@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import ProductList from "./pages/ProductList";
-import HomaPage from "./pages/HomaPage";
 import ProductUpdate from "./pages/ProductUpdate";
 import ProductAdd from "./pages/ProductAdd";
+import { productSchema } from "./schema/Product";
 
 function App() {
   const [products, setProducts] = useState([]);
   const [inputValue, setInputValue] = useState({});
+  const [errorList, setErrorList] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
     fetch("http://localhost:3000/products")
       .then((response) => response.json())
-      .then((data) => setProducts(data))
-      .catch((error) => console.log(error));
+      .then((data) => setProducts(data));
   }, []);
   const onHandleRemove = (id) => {
-    if (confirm("Ban co muon xoa khong?") == true) {
+    if (confirm("delete?") == true) {
       fetch(`http://localhost:3000/products/${id}`, {
         method: "DELETE",
       });
@@ -34,6 +34,12 @@ function App() {
 
   const onHandleSubmit = (e) => {
     e.preventDefault();
+    const { error } = productSchema.validate(inputValue, { abortEarly: false });
+    if (error) {
+      setErrorList(error.details);
+
+      return;
+    }
 
     fetch(`http://localhost:3000/products`, {
       method: "POST",
@@ -43,8 +49,8 @@ function App() {
       body: JSON.stringify(inputValue),
     })
       .then((response) => response.json())
-      .then((data) => setProducts([...products, data]))
-      .then(() => navigate("/admin/products/list"));
+      .then((data) => setProducts([...products, data]), alert("done!"))
+      .then(() => navigate("/products/list"));
   };
 
   const onHandleUpdate = (product) => {
@@ -56,34 +62,34 @@ function App() {
       body: JSON.stringify(product),
     })
       .then((response) => response.json())
-      .then((data) =>
-        setProducts(products.map((item) => (item.id == data.id ? data : item)))
-      )
-      .then(() => navigate("/admin/products/list"));
+      .then((data) => {
+        setProducts(products.map((item) => (item.id == data.id ? data : item)));
+        alert("done!");
+      })
+      .then(() => navigate("/products/list"));
   };
 
   return (
     <>
       <Routes>
-        <Route path="/" element={<HomaPage />} />
-
         <Route
-          path="/admin/products/add"
+          path="/products/add"
           element={
             <ProductAdd
               onHandleChange={onHandleChange}
               onHandleSubmit={onHandleSubmit}
+              errors={errorList}
             />
           }
         />
         <Route
-          path="/admin/products/list"
+          path="/products/list"
           element={
             <ProductList products={products} onHandleRemove={onHandleRemove} />
           }
         />
         <Route
-          path="/admin/products/:id/update"
+          path="/products/:id/update"
           element={
             <ProductUpdate
               products={products}

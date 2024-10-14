@@ -1,50 +1,38 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
 const ProductList = (props) => {
-  //   console.log("Product List:", props.products);
-  const { products, onHandleRemove } = props;
-  // console.log(props);
+  const { onHandleRemove, products } = props;
 
   return (
-    <div>
-      <h1>Danh sách sản phẩm</h1>
-      <a href="/admin/products/add">ADD PRODUCT</a>
+    <>
       <table>
         <thead>
           <tr>
-            <th>Image</th>
-            <th>Name</th>
-            <th>Desc</th>
-            <th>Action</th>
+            <td>name</td>
+            <td>price</td>
+            <td>des</td>
+            <td>action</td>
           </tr>
         </thead>
         <tbody>
           {products.map((product) => {
             return (
               <tr key={product.id}>
-                <td>
-                  <img src={product.image} alt="" />
-                </td>
                 <td>{product.name}</td>
+                <td>{product.price}</td>
                 <td>{product.description}</td>
                 <td>
                   <button onClick={() => onHandleRemove(product.id)}>
                     Xoa
                   </button>
-                  {/* <a href={`/admin/products/${product.id}/update`}>
-                    <button>Cập nhật</button>
-                  </a> */}
-                  <Link to={`/admin/products/${product.id}/update`}>
-                    <button>Cập nhật</button>
-                  </Link>
                 </td>
+                <Link to={`/products/${product.id}/update`}>Update</Link>
               </tr>
             );
           })}
         </tbody>
       </table>
-    </div>
+    </>
   );
 };
 

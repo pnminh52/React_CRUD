@@ -1,24 +1,41 @@
 import React from "react";
 
 const ProductAdd = (props) => {
-  const { onHandleChange, onHandleSubmit } = props;
+  const { onHandleChange, onHandleSubmit, errors } = props;
+  const errorDetails = errors.map((item) => {
+    return { [item.context.label]: item.message };
+  });
+  const [errorName, errorPrice, errorDescription] = errorDetails;
+
   return (
     <div>
-      <h1>Them moi san pham</h1>
       <form onSubmit={onHandleSubmit}>
-        <div className="form-group">
-          <label htmlFor="">Tên sản phẩm</label>
-          <input type="text" name="name" onInput={onHandleChange} />
+        <div>
+          <input
+            type="text"
+            name="name"
+            placeholder="name"
+            onInput={onHandleChange}
+          />
+          <span>{errorName?.name}</span>
+
+          <input
+            type="text"
+            name="price"
+            placeholder="price"
+            onInput={onHandleChange}
+          />
+          <span>{errorPrice?.price}</span>
+
+          <input
+            type="text"
+            name="description"
+            placeholder="des"
+            onInput={onHandleChange}
+          />
+          <span>{errorDescription?.description}</span>
         </div>
-        <div className="form-group">
-          <label htmlFor="">Ảnh sản phẩm</label>
-          <input type="text" name="image" onInput={onHandleChange} />
-        </div>
-        <div className="form-group">
-          <label htmlFor="">Mô tả sản phẩm</label>
-          <input type="text" name="description" onInput={onHandleChange} />
-        </div>
-        <button>Submit</button>
+        <button>submit</button>
       </form>
     </div>
   );
