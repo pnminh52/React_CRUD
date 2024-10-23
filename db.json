@@ -1,23 +1,16 @@
 {
   "products": [
     {
-      "id": "e056",
-      "name": "Phạm Nhật Minh",
-      "image": "https://picsum.photos/200/200",
-      "description": "desc 3",
-      "price": "300"
+      "id": "a36a",
+      "name": "AAHAHHAHA",
+      "price": "100055555",
+      "description": "ddddd"
     },
     {
-      "id": "3293",
-      "name": "UPDATEEEEEEEEEEEE",
+      "id": "bb49",
+      "name": "Product test key",
       "price": "300",
-      "description": "desc 3"
-    },
-    {
-      "id": "177d",
-      "name": "Phạm Nhật Minh",
-      "price": "300",
-      "description": "desc 3"
+      "description": "An apple mobile which is nothing like apple"
     }
   ]
 }

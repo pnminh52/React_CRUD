@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import ProductList from "./pages/ProductList";
-import ProductUpdate from "./pages/ProductUpdate";
-import ProductAdd from "./pages/ProductAdd";
-import { productSchema } from "./schema/Product";
+import { productSchema } from "./schema/product";
+import Add from "./pages/Add";
+import Update from "./pages/Update";
+import List from "./pages/List";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -16,7 +16,7 @@ function App() {
       .then((data) => setProducts(data));
   }, []);
   const onHandleRemove = (id) => {
-    if (confirm("delete?") == true) {
+    if (confirm("Are you sure you want to delete?") == true) {
       fetch(`http://localhost:3000/products/${id}`, {
         method: "DELETE",
       });
@@ -26,33 +26,29 @@ function App() {
       setProducts(newProductList);
     }
   };
-
   const onHandleChange = (e) => {
     const { name, value } = e.target;
     setInputValue({ ...inputValue, [name]: value });
   };
-
   const onHandleSubmit = (e) => {
     e.preventDefault();
     const { error } = productSchema.validate(inputValue, { abortEarly: false });
     if (error) {
       setErrorList(error.details);
-
       return;
     }
-
     fetch(`http://localhost:3000/products`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(inputValue),
     })
       .then((response) => response.json())
-      .then((data) => setProducts([...products, data]), alert("done!"))
+      .then(
+        (data) => setProducts([...products, data]),
+        alert("Add products successfully!")
+      )
       .then(() => navigate("/products/list"));
   };
-
   const onHandleUpdate = (product) => {
     fetch(`http://localhost:3000/products/${product.id}`, {
       method: "PATCH",
@@ -73,28 +69,23 @@ function App() {
     <>
       <Routes>
         <Route
-          path="/products/add"
-          element={
-            <ProductAdd
-              onHandleChange={onHandleChange}
-              onHandleSubmit={onHandleSubmit}
-              errors={errorList}
-            />
-          }
+          path="/products/list"
+          element={<List products={products} onHandleRemove={onHandleRemove} />}
         />
         <Route
-          path="/products/list"
+          path="/products/add"
           element={
-            <ProductList products={products} onHandleRemove={onHandleRemove} />
+            <Add
+              errors={errorList}
+              onHandleChange={onHandleChange}
+              onHandleSubmit={onHandleSubmit}
+            />
           }
         />
         <Route
           path="/products/:id/update"
           element={
-            <ProductUpdate
-              products={products}
-              onHandleUpdate={onHandleUpdate}
-            />
+            <Update products={products} onHandleUpdate={onHandleUpdate} />
           }
         />
       </Routes>
